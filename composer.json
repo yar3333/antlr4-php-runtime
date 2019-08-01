@@ -1,7 +1,7 @@
 {
     "name": "antlr4/antlr4",
     "description": "antlr4 runtime",
-    "license": "BSD",
+    "license": "BSD-3-Clause",
     "type": "library",
     "keywords": ["antlr4"],
     "authors": [
