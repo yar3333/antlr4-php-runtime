@@ -1,0 +1,21 @@
+{
+    "name": "antlr4/antlr4",
+    "description": "antlr4 runtime",
+    "license": "BSD",
+    "type": "library",
+    "keywords": ["antlr4"],
+    "authors": [
+        {
+            "name": "Yaroslav Sivakov",
+            "email": "yar3333@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Antlr4\\": "src"
+        }
+    }
+}
