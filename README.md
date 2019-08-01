@@ -1,4 +1,4 @@
-# antlr4 runtime for PHP
+# ANTLR4 runtime for PHP
 
 [![Build Status](https://travis-ci.org/yar3333/antlr4.svg?branch=master)](https://travis-ci.org/yar3333/antlr4)
 [![Latest Stable Version](https://poser.pugx.org/antlr4/antlr4/version)](https://packagist.org/packages/antlr4/antlr4)
