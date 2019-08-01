@@ -23,15 +23,6 @@ class Pair
 			&& Utils::standardEqualsFunction($this->b, $obj->b);
 	}
 
-	public function hashCode() : int
-    {
-		$hash = new Hash();
-		$hash->update($this->a);
-		$hash->update($this->b);
-		$hash->finish();
-		return $hash->hash;
-	}
-
 	function __toString()
     {
 		return ((string)$this->a) . ", " . ((string)$this->b);

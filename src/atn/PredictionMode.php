@@ -8,10 +8,8 @@ namespace Antlr4\Atn;
 
 use Antlr4\Atn\SemanticContexts\SemanticContext;
 use Antlr4\Atn\States\RuleStopState;
-use Antlr4\Utils\AltDict;
 use Antlr4\Utils\BitSet;
 use Antlr4\Utils\Map;
-use Antlr4\Utils\Utils;
 
 // This enumeration defines the prediction modes available in ANTLR 4 along with
 // utility methods for analyzing configuration sets for conflicts and/or ambiguities.
@@ -513,7 +511,6 @@ class PredictionMode
     static function getConflictingAltSubsets(ATNConfigSet $configs) : array
     {
         $configToAlts = new Map();
-        $configToAlts->hashFunction = function($cfg) { Utils::hashStuff($cfg->state->stateNumber, $cfg->context); };
         $configToAlts->equalsFunction = function($c1, $c2) { return $c1->state->stateNumber === $c2->state->stateNumber && $c1->context->equals($c2->context); };
         foreach ($configs->items() as $cfg)
         {
@@ -528,33 +525,27 @@ class PredictionMode
         return $configToAlts->values();
     }
 
-    // Get a map from state to alt subset from a configuration set. For each
-    // configuration {@code c} in {@code configs}:
-    //
-    // <pre>
-    // map[c.{@link ATNConfig//state state}] U= c.{@link ATNConfig//alt alt}
-    // </pre>
-    static function getStateToAltMap(ATNConfigSet $configs) : AltDict
+    /**
+     * Get a map from state to alt subset from a configuration set.
+     * @param ATNConfigSet $configs
+     * @return BitSet[]
+     */
+    static function getStateToAltMap(ATNConfigSet $configs) : array
     {
-        $m = new AltDict();
+        $r = [];
         foreach ($configs->items() as $c)
         {
-            $alts = $m->get($c->state);
-            if ($alts === null)
-            {
-                $alts = new BitSet();
-                $m->put($c->state, $alts);
-            }
-            $alts->add($c->alt);
+            $key = spl_object_hash($c->state);
+            if (!array_key_exists($key, $r)) $r[$key] = new BitSet();
+            $r[$key]->add($c->alt);
         }
-        return $m;
+        return $r;
     }
 
     static function hasStateAssociatedWithOneAlt(ATNConfigSet $configs) : bool
     {
-        foreach (self::getStateToAltMap($configs)->values() as $value)
+        foreach (self::getStateToAltMap($configs) as $value)
         {
-            /** @var BitSet $value */
             if ($value->length() === 1) return true;
         }
         return false;

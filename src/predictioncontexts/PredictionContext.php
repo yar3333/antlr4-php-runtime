@@ -11,7 +11,6 @@ namespace Antlr4\PredictionContexts;
 use Antlr4\Atn\ATN;
 use Antlr4\RuleContext;
 use Antlr4\Utils\DoubleKeyMap;
-use Antlr4\Utils\Hash;
 
 abstract class PredictionContext
 {
@@ -81,22 +80,6 @@ abstract class PredictionContext
     function hasEmptyPath() : bool
     {
         return $this->getReturnState($this->getLength() - 1) === self::EMPTY_RETURN_STATE;
-    }
-
-    function hashCode() : int
-    {
-        if ($this->cachedHashCode === null) {
-            $this->cachedHashCode = $this->computeHashCode();
-        }
-
-        return $this->cachedHashCode;
-    }
-
-    abstract protected function computeHashCode() : int;
-
-    function updateHashCode(Hash $hash) : void
-    {
-        $hash->update($this->hashCode());
     }
 
     abstract function getLength() : int;

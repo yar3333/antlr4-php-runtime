@@ -11,7 +11,6 @@ use Antlr4\PredictionContexts\PredictionContext;
 use Antlr4\Utils\BitSet;
 use Antlr4\Utils\DoubleKeyMap;
 use Antlr4\Utils\Utils;
-use Antlr4\Utils\Hash;
 use Antlr4\Utils\Set;
 
 // Specialized {@link Set}{@code <}{@link ATNConfig}{@code >} that can track
@@ -55,11 +54,6 @@ class ATNConfigSet
 
     public $cachedHashCode;
 
-    static function hashATNConfig(ATNConfig $c) : int
-    {
-        return $c->hashCodeForConfigSet();
-    }
-
     static function equalATNConfigs(?ATNConfig $a, ?ATNConfig $b) : bool
     {
         if ($a === $b) return true;
@@ -76,10 +70,8 @@ class ATNConfigSet
         // to use a hash table that lets us specify the equals/hashcode operation.
         // All configs but hashed by (s, i, _, pi) not including context. Wiped out
         // when we go readonly as this set becomes a DFA state.
-        $this->configLookup = new Set(
-            function($c) { return self::hashATNConfig($c); },
-            function($a, $b) { return self::equalATNConfigs($a, $b); }
-        );
+        $this->configLookup = new Set();
+        $this->configLookup->equalsFunction = function($a, $b) { return self::equalATNConfigs($a, $b); };
 
         // Indicates that this configuration set is part of a full context
         // LL prediction. It will be used to determine how to merge $. With SLL
@@ -218,31 +210,6 @@ class ATNConfigSet
             $this->conflictingAlts === $other->conflictingAlts &&
             $this->hasSemanticContext === $other->hasSemanticContext &&
             $this->dipsIntoOuterContext === $other->dipsIntoOuterContext);
-    }
-
-    function hashCode() : int
-    {
-        $hash = new Hash();
-        $this->updateHashCode($hash);
-        return $hash->finish();
-    }
-
-    function updateHashCode(Hash $hash) : void
-    {
-        if ($this->readOnly)
-        {
-            if ($this->cachedHashCode === -1)
-            {
-                $hash = new Hash();
-                $hash->update($this->configs);
-                $this->cachedHashCode = $hash->finish();
-            }
-            $hash->update($this->cachedHashCode);
-        }
-        else
-        {
-            $hash->update($this->configs);
-        }
     }
 
     function getLength() : int { return count($this->configs); }

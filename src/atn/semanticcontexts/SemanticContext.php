@@ -10,7 +10,6 @@ namespace Antlr4\Atn\SemanticContexts;
 
 use Antlr4\Recognizer;
 use Antlr4\RuleContext;
-use Antlr4\Utils\Hash;
 
 // A tree structure used to record the semantic context in which
 //  an ATN configuration is valid.  It's either a single predicate,
@@ -24,13 +23,6 @@ abstract class SemanticContext
     static function NONE() : SemanticContextPredicate { return self::$_NONE ?? (self::$_NONE = new SemanticContextPredicate()); }
 
     function __construct() {}
-
-    function hashCode() : int
-    {
-        $hash = new Hash();
-        $this->updateHashCode($hash);
-        return $hash->finish();
-    }
 
     // For context independent predicates, we evaluate them without a local
     // context (i.e., null context). That way, we can evaluate them without
@@ -66,8 +58,6 @@ abstract class SemanticContext
     {
         return $this;
     }
-
-    abstract function updateHashCode(Hash $hash) : void;
 
     static function andContext(?self $a, ?self $b)
     {

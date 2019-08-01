@@ -13,64 +13,44 @@ class Map
      */
     public $data;
 
-    /**
-     * @var callable
-     */
-    public $hashFunction;
-
     /*
      * @var callable
      */
     public $equalsFunction;
 
-    function __construct(callable $hashFunction=null, callable $equalsFunction=null)
+    function __construct()
     {
         $this->data = [];
-        $this->hashFunction = $hashFunction ?? function ($a) { return Utils::standardHashCodeFunction($a); };
-        $this->equalsFunction = $equalsFunction ?? function ($a, $b) { return Utils::standardEqualsFunction($a, $b); };
+        $this->equalsFunction = function ($a, $b) { return Utils::standardEqualsFunction($a, $b); };
     }
 
     function size() : int
     {
-        $l = 0;
-        foreach ($this->data as $hashKey => $v) {
-            if (strpos($hashKey, "hash_") === 0) {
-                $l += count($this->data[$hashKey]);
-            }
-        }
-        return $l;
+        return count($this->data);
     }
 
     function put($key, $value)
     {
-        $hashKey = "hash_" . ($this->hashFunction)($key);
-
-        if (isset($this->data[$hashKey])) {
-            $entries = &$this->data[$hashKey];
-            foreach ($entries as $entry) {
-                if (($this->equalsFunction)($key, $entry['key'])) {
-                    $oldValue = $entry['value'];
-                    $entry['value'] = $value;
-                    return $oldValue;
-                }
+        foreach ($this->data as $entry)
+        {
+            if (($this->equalsFunction)($key, $entry['key']))
+            {
+                $oldValue = $entry['value'];
+                $entry['value'] = $value;
+                return $oldValue;
             }
-            $entries[] = ['key' => $key, 'value' => $value];
-            return $value;
         }
-
-        $this->data[$hashKey] = [['key' => $key, 'value' => $value]];
+        $this->data[] = [ 'key' => $key, 'value' => $value ];
         return $value;
     }
 
     function containsKey($key) : bool
     {
-        $hashKey = "hash_" . ($this->hashFunction)($key);
-        if (isset($this->data[$hashKey]))
+        foreach ($this->data as $entry)
         {
-            $entries = $this->data[$hashKey];
-            foreach ($entries as $entry)
+            if (($this->equalsFunction)($key, $entry['key']))
             {
-                if (($this->equalsFunction)($key, $entry['key'])) return true;
+                return true;
             }
         }
         return false;
@@ -78,13 +58,11 @@ class Map
 
     function get($key)
     {
-        $hashKey = "hash_" . ($this->hashFunction)($key);
-        if (isset($this->data[$hashKey]))
+        foreach ($this->data as $entry)
         {
-            $entries = $this->data[$hashKey];
-            foreach ($entries as $entry)
+            if (($this->equalsFunction)($key, $entry['key']))
             {
-                if (($this->equalsFunction)($key, $entry['key'])) return $entry['value'];
+                return $entry['value'];
             }
         }
         return null;
@@ -92,33 +70,23 @@ class Map
 
     function entries() : array
     {
-        $l = [];
-        foreach ($this->data as $key => $value)
-        {
-            if (strpos($key, "hash_") === 0)
-            {
-                /** @noinspection SlowArrayOperationsInLoopInspection */
-                $l = array_merge($l, $value);
-            }
-        }
-        return $l;
+        return $this->data;
     }
 
     function keys(): array
     {
-        return Utils::arrayMap($this->entries(), function ($e) { return $e['key']; });
+        return Utils::arrayMap($this->data, function ($e) { return $e['key']; });
     }
 
     function values(): array
     {
-        return Utils::arrayMap($this->entries(), function ($e) { return $e['value']; });
+        return Utils::arrayMap($this->data, function ($e) { return $e['value']; });
     }
-
 
     function __toString()
     {
         $ss = [];
-        foreach ($this->entries() as $entry)
+        foreach ($this->data as $entry)
         {
             $ss[] = '{' . $entry['key'] . ':' . $entry['value'] . '}';
         }

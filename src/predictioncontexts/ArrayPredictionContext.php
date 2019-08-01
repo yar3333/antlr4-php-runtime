@@ -3,7 +3,6 @@
 
 namespace Antlr4\PredictionContexts;
 
-use Antlr4\Utils\Hash;
 use Antlr4\Utils\Utils;
 
 class ArrayPredictionContext extends PredictionContext
@@ -75,20 +74,10 @@ class ArrayPredictionContext extends PredictionContext
         return $this->returnStates;
     }
 
-    protected function computeHashCode() : int
-    {
-        $h = new Hash();
-        $h->update($this->parents, $this->returnStates);
-
-        return $h->finish();
-    }
-
     function equals($other) : bool
     {
         if ($this === $other) return true;
         if (!($other instanceof self)) return false;
-        if ($this->hashCode() !== $other->hashCode()) return false;
-
         return $this->returnStates === $other->returnStates &&
                Utils::equalArrays($this->parents, $other->parents);
     }

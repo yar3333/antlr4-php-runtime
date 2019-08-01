@@ -9,9 +9,8 @@ namespace Antlr4\Atn;
 use Antlr4\Atn\Actions\LexerAction;
 use Antlr4\CharStream;
 use Antlr4\Lexer;
-use Antlr4\Utils\Hash;
-use Antlr4\Utils\Utils;
 use Antlr4\Atn\Actions\LexerIndexedCustomAction;
+use Antlr4\Utils\Utils;
 
 // Represents an executor for a sequence of lexer actions which traversed during
 // the matching operation of a lexer rule (token).
@@ -25,18 +24,9 @@ class LexerActionExecutor
      */
     public $lexerActions;
 
-    /**
-     * @var int
-     */
-    public $cachedHashCode;
-
     function __construct(?array $lexerActions)
     {
         $this->lexerActions = $lexerActions ?? [];
-
-        // Caches the result of {@link //hashCode} since the hash code is an element
-        // of the performance-critical {@link LexerATNConfig//hashCode} operation.
-        $this->cachedHashCode = Utils::hashStuff($lexerActions);// "".join([str(la) for la in lexerActions]))
     }
 
     // Creates a {@link LexerActionExecutor} which executes the actions for
@@ -164,45 +154,10 @@ class LexerActionExecutor
         }
     }
 
-    function hashCode() : int
-    {
-        return $this->cachedHashCode;
-    }
-
-    function updateHashCode(Hash $hash) : void
-    {
-        $hash->update($this->cachedHashCode);
-    }
-
     function equals($other) : bool
     {
-        if ($this === $other)
-        {
-            return true;
-        }
-        else if (!($other instanceof self))
-        {
-            return false;
-        }
-        else if ($this->cachedHashCode !== $other->cachedHashCode)
-        {
-            return false;
-        }
-        else if (count($this->lexerActions) !== count($other->lexerActions))
-        {
-            return false;
-        }
-        else
-        {
-            $numActions = count($this->lexerActions);
-            for ($idx = 0; $idx < $numActions; ++$idx)
-            {
-                if (!$this->lexerActions[$idx]->equals($other->lexerActions[$idx]))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
+        if ($this === $other) return true;
+        if (!($other instanceof self)) return false;
+        return Utils::equalArrays($this->lexerActions, $other->lexerActions);
     }
 }

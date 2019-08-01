@@ -20,7 +20,7 @@ class BitSet
         $this->data[$value] = true;
     }
 
-    function or($set) : void
+    function or(BitSet $set) : void
     {
         foreach ($set->data as $alt) $this->add($alt);
     }
@@ -45,17 +45,12 @@ class BitSet
         return min($this->values());
     }
 
-    function hashCode() : int
-    {
-        $hash = new Hash();
-        $hash->update($this->values());
-        return $hash->finish();
-    }
-
     function equals($other) : bool
     {
         if (!($other instanceof self)) return false;
-        return $this->hashCode() === $other->hashCode();
+        if (count($this->data) !== count($other->data)) return false;
+        foreach ($this->data as $key => $v) if (!$other->contains($key)) return false;
+        return true;
     }
 
     function length() : int

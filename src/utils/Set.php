@@ -11,36 +11,22 @@ class Set implements \IteratorAggregate
     /**
      * @var array
      */
-    public $data;
-
-    /**
-     * @var callable
-     */
-    public $hashFunction;
+    private $data;
 
     /**
      * @var callable
      */
     public $equalsFunction;
 
-    function __construct(callable $hashFunction=null, callable $equalsFunction=null)
+    function __construct()
     {
         $this->data = [];
-        $this->hashFunction = $hashFunction ?? function ($a) { return Utils::standardHashCodeFunction($a); };
-        $this->equalsFunction = $equalsFunction ?? function ($a, $b) { return Utils::standardEqualsFunction($a, $b); };
+        $this->equalsFunction = function ($a, $b) { return Utils::standardEqualsFunction($a, $b); };
     }
 
     function length()
     {
-        $l = 0;
-        foreach ($this->data as $key => $value)
-        {
-            if (strpos($key, "hash_") === 0)
-            {
-                $l += count($this->data[$key]);
-            }
-        }
-        return $l;
+        return count($this->data);
     }
 
     function addAll(array $values) : void
@@ -50,22 +36,11 @@ class Set implements \IteratorAggregate
 
     function add($value)
     {
-        $hash = ($this->hashFunction)($value);
-        $key = "hash_" . $hash;
-
-        if (isset($this->data[$key]))
+        foreach ($this->data as $v)
         {
-            /** @var array $values */
-            $values = &$this->data[$key];
-            foreach ($values as $v)
-            {
-                if (($this->equalsFunction)($value, $v)) return $v;
-            }
-            $values[] = $value;
-            return $value;
+            if (($this->equalsFunction)($value, $v)) return $v;
         }
-
-        $this->data[$key] = [$value];
+        $this->data[] = $value;
         return $value;
     }
 
@@ -76,31 +51,16 @@ class Set implements \IteratorAggregate
 
     function get($value)
     {
-        $hash = ($this->hashFunction)($value);
-        $key = "hash_" . $hash;
-        if (isset($this->data[$key]))
+        foreach ($this->data as $v)
         {
-            $values = $this->data[$key];
-            foreach ($values as $i => $v)
-            {
-                if (($this->equalsFunction)($value, $v)) return $values[$i];
-            }
+            if (($this->equalsFunction)($value, $v)) return $v;
         }
         return null;
     }
 
     function values() : array
     {
-        $l = [];
-        foreach ($this->data as $key => $value)
-        {
-            if (strpos($key, "hash_") === 0)
-            {
-                /** @noinspection SlowArrayOperationsInLoopInspection */
-                $l = array_merge($l, $value);
-            }
-        }
-        return $l;
+        return $this->data;
     }
 
     function isEmpty() : bool { return !$this->data; }

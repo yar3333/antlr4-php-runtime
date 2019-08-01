@@ -3,7 +3,6 @@
 namespace Antlr4\Atn\Actions;
 
 use Antlr4\Lexer;
-use Antlr4\Utils\Hash;
 
 // Executes a custom lexer action by calling {@link Recognizer//action} with the
 // rule and action indexes assigned to the custom action. The implementation of
@@ -41,11 +40,6 @@ class LexerCustomAction extends LexerAction
     function execute(Lexer $lexer) : void
     {
         $lexer->action(null, $this->ruleIndex, $this->actionIndex);
-    }
-
-    function updateHashCode(Hash $hash) : void
-    {
-        $hash->update($this->actionType, $this->ruleIndex, $this->actionIndex);
     }
 
     function equals($other) : bool

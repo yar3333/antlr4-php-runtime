@@ -33,7 +33,7 @@ class DoubleKeyMap
 	{
 		/** @var Map $data2 */
 		$data2 = $this->data->get($k1);
-		if ($data2===null) return null;
+		if ($data2 === null) return null;
 		return $data2->get($k2);
 	}
 

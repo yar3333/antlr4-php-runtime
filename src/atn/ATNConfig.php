@@ -12,7 +12,6 @@ use Antlr4\Atn\SemanticContexts\SemanticContext;
 use Antlr4\Atn\States\ATNState;
 use Antlr4\PredictionContexts\PredictionContext;
 use Antlr4\Recognizer;
-use Antlr4\Utils\Hash;
 
 // A tuple: (ATN state, predicted alt, syntactic, semantic context).
 // The syntactic context is a graph-structured stack node whose
@@ -99,18 +98,6 @@ class ATNConfig
         $this->reachesIntoOuterContext = $config->reachesIntoOuterContext;
     }
 
-    function hashCode() : int
-    {
-        $hash = new Hash();
-        $this->updateHashCode($hash);
-        return $hash->finish();
-    }
-
-    function updateHashCode(Hash $hash) : void
-    {
-        $hash->update($this->state->stateNumber, $this->alt, $this->context, $this->semanticContext);
-    }
-
     // An ATN configuration is equal to another if both have
     // the same state, they predict the same alternative, and
     // syntactic/semantic contexts are the same.
@@ -125,13 +112,6 @@ class ATNConfig
             ($this->context === null ? $other->context === null : $this->context->equals($other->context)) &&
             $this->semanticContext->equals($other->semanticContext) &&
             $this->isPrecedenceFilterSuppressed() === $other->isPrecedenceFilterSuppressed();
-    }
-
-    function hashCodeForConfigSet() : int
-    {
-        $hash = new Hash();
-        $hash->update($this->state->stateNumber, $this->alt, $this->semanticContext);
-        return $hash->finish();
     }
 
 	/**

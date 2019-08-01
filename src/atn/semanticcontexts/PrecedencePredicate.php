@@ -3,7 +3,6 @@
 namespace Antlr4\Atn\SemanticContexts;
 
 use Antlr4\Recognizer;
-use Antlr4\Utils\Hash;
 use Antlr4\Utils\Set;
 
 class PrecedencePredicate extends SemanticContext
@@ -37,11 +36,6 @@ class PrecedencePredicate extends SemanticContext
     function compareTo(PrecedencePredicate $other) : int
     {
         return $this->precedence - $other->precedence;
-    }
-
-    function updateHashCode(Hash $hash) : void
-    {
-        $hash->update(31);
     }
 
     function equals(object $other) : bool

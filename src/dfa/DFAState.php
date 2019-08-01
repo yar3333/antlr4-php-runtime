@@ -9,7 +9,6 @@ namespace Antlr4\Dfa;
 use Antlr4\Atn\ATNConfigSet;
 use Antlr4\Atn\LexerActionExecutor;
 use Antlr4\Atn\SemanticContexts\SemanticContext;
-use Antlr4\Utils\Hash;
 use Antlr4\Utils\Set;
 
 // A DFA state represents a set of possible ATN configurations.
@@ -168,19 +167,5 @@ class DFAState
                 $s .= $this->prediction;
         }
         return $s;
-    }
-
-    function hashCode() : int
-    {
-        $hash = new Hash();
-        $hash->update($this->configs);
-        if($this->isAcceptState)
-        {
-            if ($this->predicates !== null)
-                $hash->update($this->predicates);
-            else
-                $hash->update($this->prediction);
-        }
-        return $hash->finish();
     }
 }

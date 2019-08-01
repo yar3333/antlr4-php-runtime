@@ -3,7 +3,6 @@
 namespace Antlr4\Atn\Actions;
 
 use Antlr4\Lexer;
-use Antlr4\Utils\Hash;
 
 class LexerModeAction extends LexerAction
 {
@@ -21,11 +20,6 @@ class LexerModeAction extends LexerAction
     function execute(Lexer $lexer) : void
     {
         $lexer->mode($this->mode);
-    }
-
-    function updateHashCode(Hash $hash) : void
-    {
-        $hash->update($this->actionType, $this->mode);
     }
 
     function equals($other) : bool

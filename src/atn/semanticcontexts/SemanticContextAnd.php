@@ -4,7 +4,6 @@ namespace Antlr4\Atn\SemanticContexts;
 
 use Antlr4\Recognizer;
 use Antlr4\RuleContext;
-use Antlr4\Utils\Hash;
 use Antlr4\Utils\Set;
 use Antlr4\Utils\Utils;
 
@@ -47,11 +46,6 @@ class SemanticContextAnd extends SemanticContext
         if ($this === $other) return true;
         if (!($other instanceof self)) return false;
         return Utils::equalArrays($this->opnds, $other->opnds);
-    }
-
-    function updateHashCode(Hash $hash) : void
-    {
-        $hash->update($this->opnds, "AND");
     }
 
     // {@inheritDoc}

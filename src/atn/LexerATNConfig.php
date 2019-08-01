@@ -3,7 +3,6 @@
 namespace Antlr4\Atn;
 
 use Antlr4\Atn\States\DecisionState;
-use Antlr4\Utils\Hash;
 
 class LexerATNConfig extends ATNConfig
 {
@@ -25,11 +24,6 @@ class LexerATNConfig extends ATNConfig
         $this->passedThroughNonGreedyDecision = $config ? $this->checkNonGreedyDecision($config, $this->state) : false;
     }
 
-    function updateHashCode(Hash $hash) : void
-    {
-        $hash->update($this->state->stateNumber, $this->alt, $this->context, $this->semanticContext, $this->passedThroughNonGreedyDecision, $this->lexerActionExecutor);
-    }
-
     function equals($other) : bool
     {
         return $this === $other ||
@@ -39,11 +33,6 @@ class LexerATNConfig extends ATNConfig
                 ($this->lexerActionExecutor ? $this->lexerActionExecutor->equals($other->lexerActionExecutor) : !$other->lexerActionExecutor) &&
                 parent::equals($other)
             );
-    }
-
-    function hashCodeForConfigSet() : int
-    {
-        return $this->hashCode();
     }
 
     function equalsForConfigSet($other) : bool

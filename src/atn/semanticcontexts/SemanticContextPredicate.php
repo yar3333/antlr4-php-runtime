@@ -4,7 +4,6 @@ namespace Antlr4\Atn\SemanticContexts;
 
 use Antlr4\Recognizer;
 use Antlr4\RuleContext;
-use Antlr4\Utils\Hash;
 
 class SemanticContextPredicate extends SemanticContext
 {
@@ -36,11 +35,6 @@ class SemanticContextPredicate extends SemanticContext
     {
         $localctx = $this->isCtxDependent ? $outerContext : null;
         return $parser->sempred($localctx, $this->ruleIndex, $this->predIndex);
-    }
-
-    function updateHashCode(Hash $hash) : void
-    {
-        $hash->update($this->ruleIndex, $this->predIndex, $this->isCtxDependent);
     }
 
     function equals($other) : bool

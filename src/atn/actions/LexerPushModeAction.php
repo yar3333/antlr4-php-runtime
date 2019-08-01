@@ -3,7 +3,6 @@
 namespace Antlr4\Atn\Actions;
 
 use Antlr4\Lexer;
-use Antlr4\Utils\Hash;
 
 // Implements the {@code pushMode} lexer action by calling
 // {@link Lexer//pushMode} with the assigned mode.
@@ -22,11 +21,6 @@ class LexerPushModeAction extends LexerAction
     function execute(Lexer $lexer) : void
     {
         $lexer->pushMode($this->mode);
-    }
-
-    function updateHashCode(Hash $hash) : void
-    {
-        $hash->update($this->actionType, $this->mode);
     }
 
     function equals(LexerAction $other) : bool

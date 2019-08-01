@@ -6,7 +6,6 @@
 
 namespace Antlr4\Atn\Actions;
 
-use Antlr4\Utils\Hash;
 use Antlr4\Lexer;
 
 abstract class LexerAction
@@ -18,18 +17,6 @@ abstract class LexerAction
     {
         $this->actionType = $actionType;
         $this->isPositionDependent = false;
-    }
-
-    function hashCode() : int
-    {
-        $hash = new Hash();
-        $this->updateHashCode($hash);
-        return $hash->finish();
-    }
-
-    function updateHashCode(Hash $hash) : void
-    {
-        $hash->update($this->actionType);
     }
 
     function equals(LexerAction $other) : bool

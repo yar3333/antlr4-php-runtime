@@ -3,7 +3,6 @@
 namespace Antlr4\Atn\Actions;
 
 use Antlr4\Lexer;
-use Antlr4\Utils\Hash;
 
 // This implementation of {@link LexerAction} is used for tracking input offsets
 // for position-dependent actions within a {@link LexerActionExecutor}.
@@ -50,11 +49,6 @@ class LexerIndexedCustomAction extends LexerAction
     {
         // assume the input stream position was properly set by the calling code
         $this->action->execute($lexer);
-    }
-
-    function updateHashCode(Hash $hash) : void
-    {
-        $hash->update($this->actionType, $this->offset, $this->action);
     }
 
     function equals(LexerAction $other) : bool
