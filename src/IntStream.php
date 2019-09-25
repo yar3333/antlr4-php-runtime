@@ -1,6 +1,6 @@
 <?php
 
-namespace antlr4;
+namespace Antlr4;
 
 /**
  * A simple stream of symbols whose values are represented as integers. This

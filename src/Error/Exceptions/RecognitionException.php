@@ -7,7 +7,7 @@
 namespace Antlr4\Error\Exceptions;
 
 use Antlr4\IntervalSet;
-use antlr4\IntStream;
+use Antlr4\IntStream;
 use Antlr4\Parser;
 use Antlr4\Token;
 
