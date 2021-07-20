@@ -600,7 +600,7 @@ class ATNDeserializer
             {
                 $this->checkCondition($state->startState !== null);
             }
-            else if ($state instanceof \Antlr4\Atn\States\ DecisionState)
+            else if ($state instanceof \Antlr4\Atn\States\DecisionState)
             {
                 $this->checkCondition(count($state->transitions) <= 1 || $state->decision >= 0);
             }
