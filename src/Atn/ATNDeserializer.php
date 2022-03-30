@@ -139,7 +139,7 @@ class ATNDeserializer
 
     function reset(string $data) : void
     {
-        $temp = []; foreach (preg_split('//u', $data, null, PREG_SPLIT_NO_EMPTY) as $c) $temp[] = $this->reset_adjust($c);
+        $temp = []; foreach (preg_split('//u', $data, -1, PREG_SPLIT_NO_EMPTY) as $c) $temp[] = $this->reset_adjust($c);
         // don't adjust the first value since that's the version number
         $temp[0] = Utils::charCodeAt($data, 0);
         $this->data = $temp;
